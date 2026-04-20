@@ -11,9 +11,12 @@ export class UserService {
   constructor(@InjectModel('User') private userModel: Model<User>) {}
 
   private omitPassword(user: User) {
-    return user.depopulate('password');
+    const userObj = user.toObject() as User;
+    // passwordni ajratib olamiz, qolganini 'result' ga yig'amiz
+    const { password, ...result } = userObj;
+    return result;
   }
-  async create(userDto: RegisterDTO): Promise<User> {
+  async create(userDto: RegisterDTO): Promise<Partial<User>> {
     const { username } = userDto;
     const user = await this.userModel.findOne({ username });
     if (user) {
@@ -25,18 +28,26 @@ export class UserService {
     return this.omitPassword(createdUser);
   }
 
-  async findByLogin(userDto: LoginDTO): Promise<User> {
+  async findByLogin(userDto: LoginDTO): Promise<Partial<User>> {
     const { username, password } = userDto;
-    const user = await this.userModel.findById({ username });
+    const user = await this.userModel.findOne({ username });
 
     if (!user) {
-      throw new HttpException('Invalid credintial', HttpStatus.UNAUTHORIZED);
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
     }
-
     if (await bcrypt.compare(password, user.password)) {
       return this.omitPassword(user);
     } else {
-      throw new HttpException('Invalid credintial', HttpStatus.UNAUTHORIZED);
+      throw new HttpException(
+        'Password or login is wrong!',
+        HttpStatus.BAD_REQUEST,
+      );
     }
+  }
+
+  async findByPayload(payload: any) {
+    const { username }: any = payload;
+
+    return await this.userModel.findOne({ username });
   }
 }
