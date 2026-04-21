@@ -33,7 +33,11 @@ export default tseslint.config(
       '@typescript-eslint/explicit-function-return-type': 'off',
       '@typescript-eslint/explicit-module-boundary-types': 'off',
       '@typescript-eslint/no-explicit-any': 'off',
-      '@typescript-eslint/no-unused-vars': 'off',
+      '@typescript-eslint/no-unsafe-call': 'off', // AuthGuard('jwt') va @IsString() xatolarini o'chiradi
+      '@typescript-eslint/no-unsafe-member-access': 'off', // Obyekt ichidagi xususiyatlarga xavfsiz kirish xatosini o'chiradi
+      '@typescript-eslint/no-unsafe-assignment': 'off', // Noma'lum turdagi qiymatni o'zlashtirish xatosini o'chiradi
+      '@typescript-eslint/no-unsafe-argument': 'off', // @UseGuards() ichidagi xatoni o'chiradi
+      '@typescript-eslint/unbound-method': 'off',
     },
   },
 );

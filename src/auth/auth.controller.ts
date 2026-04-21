@@ -1,9 +1,16 @@
-import { Controller, Post, Body, Get, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  Get,
+  UseGuards,
+  UsePipes,
+  ValidationPipe,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { RegisterDTO } from 'src/shared/dto/register.dto';
 import { LoginDTO } from 'src/shared/dto/login.dto';
 import { UserService } from 'src/shared/user.service';
-import { AuthGuard } from '@nestjs/passport';
 import { JwtPayload } from 'src/types/jwt-payload';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guards';
 
@@ -15,6 +22,7 @@ export class AuthController {
   ) {}
 
   @Post('register')
+  @UsePipes(new ValidationPipe())
   async register(@Body() userDto: RegisterDTO) {
     const user = await this.userService.create(userDto);
 
@@ -27,6 +35,7 @@ export class AuthController {
   }
 
   @Post('login')
+  @UsePipes(new ValidationPipe())
   async login(@Body() userDto: LoginDTO) {
     const user = await this.userService.findByLogin(userDto);
     const payload: JwtPayload = {
