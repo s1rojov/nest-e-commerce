@@ -6,6 +6,7 @@ import * as bcrypt from 'bcrypt';
 import { User } from 'src/types/user';
 import { RegisterDTO } from './dto/register.dto';
 import { LoginDTO } from './dto/login.dto';
+import { JwtPayload } from 'src/types/jwt-payload';
 @Injectable()
 export class UserService {
   constructor(@InjectModel('User') private userModel: Model<User>) {}
@@ -45,8 +46,8 @@ export class UserService {
     }
   }
 
-  async findByPayload(payload: any) {
-    const { username }: any = payload;
+  async findByPayload(payload: JwtPayload) {
+    const { username } = payload;
 
     return await this.userModel.findOne({ username });
   }

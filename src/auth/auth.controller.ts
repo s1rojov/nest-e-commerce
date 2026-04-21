@@ -4,6 +4,8 @@ import { RegisterDTO } from 'src/shared/dto/register.dto';
 import { LoginDTO } from 'src/shared/dto/login.dto';
 import { UserService } from 'src/shared/user.service';
 import { AuthGuard } from '@nestjs/passport';
+import { JwtPayload } from 'src/types/jwt-payload';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guards';
 
 @Controller('auth')
 export class AuthController {
@@ -16,26 +18,26 @@ export class AuthController {
   async register(@Body() userDto: RegisterDTO) {
     const user = await this.userService.create(userDto);
 
-    const payload = {
+    const payload: JwtPayload = {
       username: user.username,
     };
 
-    const token = await this.authService.signPayload(payload);
+    const token = this.authService.signPayload(payload);
     return { user, token };
   }
 
   @Post('login')
   async login(@Body() userDto: LoginDTO) {
     const user = await this.userService.findByLogin(userDto);
-    const payload = {
+    const payload: JwtPayload = {
       username: user.username,
     };
-    const token = await this.authService.signPayload(payload);
+    const token = this.authService.signPayload(payload);
     return { user, token };
   }
 
   @Get('check')
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(JwtAuthGuard)
   check() {
     return 'authorized';
   }

@@ -2,17 +2,18 @@ import { PassportStrategy } from '@nestjs/passport';
 import { Strategy, VerifiedCallback, ExtractJwt } from 'passport-jwt';
 import { AuthService } from './auth.service';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { JwtPayload } from 'src/types/jwt-payload';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(private authService: AuthService) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-      secretOrKey: 'secretKey',
+      secretOrKey: process.env.JWT_SECRET || 'secretKey',
     });
   }
 
-  async validate(payload: any, done: VerifiedCallback) {
+  async validate(payload: JwtPayload, done: VerifiedCallback) {
     const user = await this.authService.validateUser(payload);
     if (!user) {
       return done(
