@@ -3,19 +3,24 @@ import {
   Get,
   Post,
   Body,
-  Patch,
+  Put,
   Param,
   Delete,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Product')
 @Controller('product')
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
   @Post('create')
+  @UsePipes(new ValidationPipe())
   async create(@Body() productDto: CreateProductDto) {
     return await this.productService.create(productDto);
   }
@@ -30,7 +35,8 @@ export class ProductController {
     return await this.productService.findOne(id);
   }
 
-  @Patch('update/:id')
+  @Put('update/:id')
+  @UsePipes(new ValidationPipe())
   async update(@Param('id') id: string, @Body() productDto: UpdateProductDto) {
     return await this.productService.update(id, productDto);
   }
