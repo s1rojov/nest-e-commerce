@@ -15,28 +15,28 @@ import { UpdateProductDto } from './dto/update-product.dto';
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
-  @Post()
+  @Post('create')
   async create(@Body() productDto: CreateProductDto) {
     return await this.productService.create(productDto);
   }
 
-  @Get()
-  findAll() {
-    return this.productService.findAll();
+  @Get('getlist')
+  async findAll() {
+    return await this.productService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.productService.findOne(+id);
+  @Get('get/:id')
+  async findOne(@Param('id') id: string) {
+    return await this.productService.findOne(id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() productDto: UpdateProductDto) {
-    return this.productService.update(+id, productDto);
+  @Patch('update/:id')
+  async update(@Param('id') id: string, @Body() productDto: UpdateProductDto) {
+    return await this.productService.update(id, productDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.productService.remove(+id);
+  @Delete('delete/:id')
+  async remove(@Param('id') id: string) {
+    return await this.productService.remove(id);
   }
 }

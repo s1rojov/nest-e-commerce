@@ -13,19 +13,19 @@ export class ProductService {
     return await this.productModel.create(productDto as any);
   }
 
-  findAll() {
-    return `This action returns all product`;
+  async findAll() {
+    return await this.productModel.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} product`;
+  async findOne(id: string) {
+    return await this.productModel.findOne({ _id: id });
   }
 
-  update(id: number, productDto: UpdateProductDto) {
-    return productDto;
+  async update(id: string, productDto: UpdateProductDto) {
+    return await this.productModel.updateOne({ _id: id }, productDto);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} product`;
+  async remove(id: string) {
+    return await this.productModel.deleteOne({ _id: id });
   }
 }
