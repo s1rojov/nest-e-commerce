@@ -12,7 +12,7 @@ import { ProductModule } from './product/product.module';
   imports: [
     ConfigModule.forRoot(),
     MongooseModule.forRoot(
-      process.env.MONDODB_URL || 'mongodb://localhost/nest',
+      process.env.MONGODB_URL || 'mongodb://localhost/nest',
     ),
     SharedModule,
     AuthModule,
