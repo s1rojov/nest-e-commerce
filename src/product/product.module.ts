@@ -3,6 +3,7 @@ import { ProductService } from './product.service';
 import { ProductController } from './product.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ProductSchema } from 'src/models/product.schema';
+import { SharedModule } from 'src/shared/shared.module';
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { ProductSchema } from 'src/models/product.schema';
         schema: ProductSchema,
       },
     ]),
+    SharedModule,
   ],
   controllers: [ProductController],
   providers: [ProductService],
