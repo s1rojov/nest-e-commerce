@@ -10,6 +10,7 @@ import {
   ValidationPipe,
   UseInterceptors,
   UploadedFile,
+  UseGuards,
 } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { CreateProductDto } from './dto/create-product.dto';
@@ -18,6 +19,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { diskStorage } from 'multer';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { editedFileName } from 'src/utils/file-helper';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guards';
 
 @ApiTags('Product')
 @Controller('product')
@@ -26,6 +28,7 @@ export class ProductController {
 
   @Post('create')
   @UsePipes(new ValidationPipe())
+  @UseGuards(JwtAuthGuard)
   @UseInterceptors(
     FileInterceptor('image', {
       storage: diskStorage({
@@ -42,17 +45,20 @@ export class ProductController {
   }
 
   @Get('getlist')
+  @UseGuards(JwtAuthGuard)
   async findAll() {
     return await this.productService.findAll();
   }
 
   @Get('get/:id')
+  @UseGuards(JwtAuthGuard)
   async findOne(@Param('id') id: string) {
     return await this.productService.findOne(id);
   }
 
   @Put('update/:id')
   @UsePipes(new ValidationPipe())
+  @UseGuards(JwtAuthGuard)
   @UseInterceptors(
     FileInterceptor('image', {
       storage: diskStorage({
@@ -65,11 +71,12 @@ export class ProductController {
     @Param('id') id: string,
     @Body() productDto: UpdateProductDto,
     @UploadedFile() image: Express.Multer.File,
-  ): any {
+  ): Promise<any> {
     return await this.productService.update(id, productDto, image);
   }
 
   @Delete('delete/:id')
+  @UseGuards(JwtAuthGuard)
   async remove(@Param('id') id: string) {
     return await this.productService.remove(id);
   }

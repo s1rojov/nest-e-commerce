@@ -31,18 +31,13 @@ export class ProductService {
     const product: any = await this.productModel.findOne({ _id: id });
 
     if (image) {
-      try {
-        // Faylni o'chirishni kutamiz (await)
-        await unlink(`${__dirname}/../../files/${product.image}`);
-      } catch (error) {
-        // Agar fayl topilmasa yoki o'chirishda xato bo'lsa
-        throw new HttpException(
-          'File not found or error deleting',
-          HttpStatus.NOT_FOUND,
-        );
-      }
-
+      fs.unlink(`${__dirname}/../../files/${product.image}`, async (error) => {
+        if (error) {
+          throw new HttpException('File could not found', HttpStatus.NOT_FOUND);
+        }
+      });
       productDto.image = image.filename;
+      return await product.updateOne(productDto);
     }
 
     return await product.updateOne(productDto);
