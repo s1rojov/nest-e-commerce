@@ -28,7 +28,7 @@ export class ProductController {
 
   @Post('create')
   @UsePipes(new ValidationPipe())
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   @UseInterceptors(
     FileInterceptor('image', {
       storage: diskStorage({
@@ -45,20 +45,20 @@ export class ProductController {
   }
 
   @Get('getlist')
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   async findAll() {
     return await this.productService.findAll();
   }
 
   @Get('get/:id')
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   async findOne(@Param('id') id: string) {
     return await this.productService.findOne(id);
   }
 
   @Put('update/:id')
   @UsePipes(new ValidationPipe())
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   @UseInterceptors(
     FileInterceptor('image', {
       storage: diskStorage({
@@ -76,7 +76,7 @@ export class ProductController {
   }
 
   @Delete('delete/:id')
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   async remove(@Param('id') id: string) {
     return await this.productService.remove(id);
   }
