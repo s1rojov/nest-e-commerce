@@ -10,16 +10,18 @@ import {
   ValidationPipe,
   UseInterceptors,
   UploadedFile,
-  UseGuards,
+  Query,
+  // UseGuards,
 } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { CreateProductDto } from './dto/create-product.dto';
+import { QueryProductDto } from './dto/query-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { diskStorage } from 'multer';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { editedFileName } from 'src/utils/file-helper';
-import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guards';
+// import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guards';
 
 @ApiTags('Product')
 @Controller('product')
@@ -46,8 +48,8 @@ export class ProductController {
 
   @Get('getlist')
   // @UseGuards(JwtAuthGuard)
-  async findAll() {
-    return await this.productService.findAll();
+  async findAll(@Query() query: QueryProductDto) {
+    return await this.productService.findAll(query);
   }
 
   @Get('get/:id')

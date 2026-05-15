@@ -1,3 +1,4 @@
+import { QueryProductDto } from './dto/query-product.dto';
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
@@ -15,8 +16,18 @@ export class ProductService {
     return await this.productModel.create(productDto as any);
   }
 
-  async findAll() {
-    return await this.productModel.find();
+  async findAll(query: QueryProductDto) {
+    const queryObject = query.search
+      ? {
+          title: {
+            $regex: query.search,
+            $options: 'i',
+          },
+        }
+      : {};
+    const limit = Number(query.limit || 12);
+    const skip = (Number(query.page || 1) - 1) * Number(query.limit || 12);
+    return await this.productModel.find(queryObject).limit(limit).skip(skip);
   }
 
   async findOne(id: string) {
