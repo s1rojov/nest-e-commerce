@@ -7,10 +7,12 @@ import { OrderController } from './order.controller';
 
 @Module({
   imports: [
-    MongooseModule.forFeature({
-      name: 'Order',
-      schema: OrderSchema,
-    }),
+    MongooseModule.forFeature([
+      {
+        name: 'Order',
+        schema: OrderSchema,
+      },
+    ]),
     SharedModule,
   ],
   controllers: [OrderController],
